@@ -2,18 +2,18 @@ import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import SequenceTile from '../components/SequenceTile';
 import { SEQUENCES } from '../data';
-import { StackActions, NavigationActions } from 'react-navigation';
+
 // import colors from '../constants/colors'
 
 const MySequencesScreen = ({ navigation }) => {
   const renderSequenceTile = (itemData) => {
-      
-    const { title, duration, id } = itemData.item;
-    
+    const { title, duration, id, intervals } = itemData.item;
+
     return (
       <SequenceTile
         title={title}
         duration={duration}
+        intervalsAmount={intervals.length}
         onPlay={() =>
           navigation.navigate({
             routeName: 'Timer',
@@ -37,10 +37,13 @@ const MySequencesScreen = ({ navigation }) => {
   return (
     <View style={styles.screen}>
       <FlatList
+        style={styles.listStyle}
         data={SEQUENCES}
         keyExtractor={(seq) => seq.id}
         renderItem={renderSequenceTile}
+        ListFooterComponent={<View style={{ margin: 15 }} />}
       />
+
     </View>
   );
 };
@@ -52,7 +55,11 @@ MySequencesScreen.navigationOptions = {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    padding: 20
+    paddingHorizontal: 20,
+    paddingTop: 20
+  },
+  listStyle: {
+    paddingBottom: 50
   }
 });
 

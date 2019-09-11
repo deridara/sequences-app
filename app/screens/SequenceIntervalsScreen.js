@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import FloatingButton from '../components/FloatingButton';
+import IntervalTile from '../components/IntervalTile'
 import { SEQUENCES } from '../data';
 
 // import colors from '../constants/colors'
 
+const renderIntervalTile = ({item: {title, duration, stopAfterFinish}}) => {
+  return <IntervalTile title={title} duration={duration} stopAfterFinish={stopAfterFinish} />;
+}
+
 const SequenceIntervalsScreen = ({ navigation }) => {
   const seqId = navigation.getParam('seqId');
-  const selectedSequence = SEQUENCES.find((seq) => seq.id === seqId);
+  const intervals = SEQUENCES.find((seq) => seq.id === seqId).intervals;
   return (
     <View style={styles.screen}>
-      <Button
-        title='to my sequences'
-        onPress={() =>
-          navigation.navigate({
-            routeName: 'MySequences',
-            params: {
-              seqId: seqId
-            }
-          })
-        }
+      <FlatList
+        style={styles.listStyle}
+        data={intervals}
+        keyExtractor={(interval) => interval.id}
+        renderItem={renderIntervalTile}
+        ListFooterComponent={<View style={{ margin: 30 }} />}
       />
-      <Button
-        title='play'
+      <FloatingButton
+        title='play sequence'
         onPress={() =>
           navigation.replace({
             routeName: 'Timer',
@@ -44,8 +46,8 @@ SequenceIntervalsScreen.navigationOptions = ({ navigation }) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    paddingHorizontal: 20,
+    paddingTop: 20
   }
 });
 
